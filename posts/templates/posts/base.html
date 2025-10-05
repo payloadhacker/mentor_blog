@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <title>Mentor Blog</title>
 </head>
-{% if messages %}
+
+
+<body>
+  {% if messages %}
   <div class="container mt-3">
     {% for message in messages %}
       <div 
@@ -16,8 +19,6 @@
     {% endfor %}
   </div>
 {% endif %}
-
-<body>
   <header>
     <h2><a href="{% url 'post_list' %}">Mentor Blog</a></h2>
     <hr>
