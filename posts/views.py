@@ -7,10 +7,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-#redirects
-LOGIN_REDIRECT_URL = "post_list"
-LOGOUT_REDIRECT_URL = "post_list"
-LOGIN_URL = "login"
 
 
 
