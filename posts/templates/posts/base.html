@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mentor Blog</title>
+</head>
+<body>
+  <header>
+    <h2><a href="{% url 'post_list' %}">Mentor Blog</a></h2>
+    <hr>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
