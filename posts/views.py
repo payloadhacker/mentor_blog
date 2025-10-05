@@ -6,6 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 
 
 
@@ -34,6 +35,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         post = form.save(commit=False)
         post.author = Author.objects.get(user=self.request.user)
         post.save()
+        messages.success(self.request, " Post created successfully!")
         return super().form_valid(form)
 
     
@@ -43,19 +45,20 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     template_name = 'posts/post_form.html'
     success_url = reverse_lazy("post_list")
-    def test_func(self):
-            post = self.get_object()
-            return post.author.user == self.request.user
-
+    def test_func(self, form):
+        messages.success(self.request, " Post updated successfully!")
+        return super().form_valid(form)
+    
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     
     model = Post
     template_name = "posts/post_confirm_delete.html"
     successful_url = reverse_lazy('post_list')
-    def test_func(self):
-        post = self.get_object()
-        return post.author.user == self.request.user
+
+    def delete(self, request, *args, **kwargs):
+        messages.warning(self.request, " Post deleted.")
+        return super().delete(request, *args, **kwargs)
 
         
 def signup_view(request):
@@ -65,6 +68,8 @@ def signup_view(request):
             user = form.save()
             login(request, user)
             Author.objects.create(user=user)
+            messages.success(request, " Account created successfully!")
+
             return redirect("post_list")
     else:
         form = UserCreationForm()
