@@ -27,7 +27,10 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         # temporary: assign first author
-        post.author = Author.objects.first()
+        default_author = Author.objects.first()
+        if default_author is None:
+            return super().form_invalid(form)
+        post.author = default_author
         post.save()
         return super().form_valid(form)
 

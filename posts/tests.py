@@ -1,7 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from posts.models import Author, Post, Tag
+from django.contrib import admin
+from posts.admin import PostAdmin
 
+
+class AdminTest(TestCase):
+    def test_post_admin_registrationa(self):
+        self.assertIsInstance(admin.site._registry.get(Post), PostAdmin)
 
 class PostModelTest(TestCase):
     def test_create_post_with_author_and_tag(self):
