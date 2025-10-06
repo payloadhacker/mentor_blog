@@ -1,0 +1,66 @@
+{% extends "posts/base.html" %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">API Client Demo</h2>
+
+<div id="posts"></div>
+
+<h3 class="mt-6 text-xl font-semibold">Create a Post</h3>
+<form id="createForm">
+  <input type="text" id="title" placeholder="Title" required class="border p-2 block mb-2" />
+  <textarea id="body" placeholder="Body" required class="border p-2 block mb-2"></textarea>
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Create</button>
+</form>
+
+<script>
+  const postsDiv = document.getElementById('posts');
+  const form = document.getElementById('createForm');
+
+  async function fetchPosts() {
+    const res = await fetch('/api/posts/');
+    const data = await res.json();
+    const posts = data.results || data;  // handle paginated/non-paginated
+    postsDiv.innerHTML = posts.map(p => `
+      <div class="border p-3 my-2">
+        <h3 class="font-bold">${p.title}</h3>
+        <p>${p.body}</p>
+        <small>By ${p.author_username || 'Unknown'}</small>
+        <button onclick="deletePost(${p.id})" class="bg-red-500 text-white px-2 py-1 mt-2 rounded">Delete</button>
+      </div>
+    `).join('');
+  }
+
+  async function createPost(e) {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const body = document.getElementById('body').value;
+
+    const res = await fetch('/api/posts/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, body })
+    });
+
+    if (res.ok) {
+      alert('Post created!');
+      fetchPosts();
+      form.reset();
+    } else {
+      alert('Error creating post');
+    }
+  }
+
+  async function deletePost(id) {
+    const res = await fetch(`/api/posts/${id}/`, { method: 'DELETE' });
+    if (res.status === 204) {
+      alert('Deleted!');
+      fetchPosts();
+    } else {
+      alert('Error deleting post (maybe not your post?)');
+    }
+  }
+
+  form.addEventListener('submit', createPost);
+  fetchPosts();
+</script>
+{% endblock %}

@@ -9,7 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
 
-
+def client_View(request):
+    return render(request, "posts/api_client.html")
 
 class PostListView(ListView):
     model = Post
